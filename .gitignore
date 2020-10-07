@@ -2,4 +2,4 @@
 Release/*
 FotoRobot/obj/*
 FotoRobot/bin/*
-*.cache
+packages/*
