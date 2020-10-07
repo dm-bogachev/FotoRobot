@@ -43,23 +43,24 @@
             this.label1 = new System.Windows.Forms.Label();
             this.BlurValue = new System.Windows.Forms.ComboBox();
             this.conStatus = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.imagePanels = new System.Windows.Forms.TableLayoutPanel();
-            this.imageView = new Emgu.CV.UI.ImageBox();
             this.originalView = new Emgu.CV.UI.ImageBox();
+            this.imageView = new Emgu.CV.UI.ImageBox();
+            this.buttonAdaptateCanny = new System.Windows.Forms.Button();
             this.ROIWidth = new FotoRobot.CTrackBar();
             this.cannyThreshold1 = new FotoRobot.CTrackBar();
             this.cannyThreshold2 = new FotoRobot.CTrackBar();
             this.ROIHeight = new FotoRobot.CTrackBar();
             this.MinContLength = new FotoRobot.CTrackBar();
             this.ApproximationEpsilon = new FotoRobot.CTrackBar();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.mainLayoutPanel.SuspendLayout();
             this.buttonLayoutPanel.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panelBlur.SuspendLayout();
             this.imagePanels.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.imageView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.originalView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imageView)).BeginInit();
             this.SuspendLayout();
             // 
             // mainLayoutPanel
@@ -108,6 +109,7 @@
             // buttonCamera
             // 
             this.buttonCamera.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonCamera.Enabled = false;
             this.buttonCamera.FlatAppearance.BorderSize = 0;
             this.buttonCamera.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonCamera.Image = global::FotoRobot.Properties.Resources.play;
@@ -178,13 +180,14 @@
             this.tableLayoutPanel1.Controls.Add(this.ROIWidth, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.cannyThreshold1, 0, 7);
             this.tableLayoutPanel1.Controls.Add(this.cannyThreshold2, 0, 8);
-            this.tableLayoutPanel1.Controls.Add(this.isAdaptiveCanny, 0, 6);
             this.tableLayoutPanel1.Controls.Add(this.ROIHeight, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.panelBlur, 0, 5);
             this.tableLayoutPanel1.Controls.Add(this.MinContLength, 0, 11);
             this.tableLayoutPanel1.Controls.Add(this.ApproximationEpsilon, 0, 10);
             this.tableLayoutPanel1.Controls.Add(this.conStatus, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.checkBox1, 0, 4);
+            this.tableLayoutPanel1.Controls.Add(this.isAdaptiveCanny, 0, 12);
+            this.tableLayoutPanel1.Controls.Add(this.buttonAdaptateCanny, 0, 6);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(638, 3);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -195,7 +198,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
@@ -210,10 +213,9 @@
             this.isAdaptiveCanny.AutoSize = true;
             this.isAdaptiveCanny.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.isAdaptiveCanny.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.isAdaptiveCanny.Dock = System.Windows.Forms.DockStyle.Left;
-            this.isAdaptiveCanny.Location = new System.Drawing.Point(3, 218);
+            this.isAdaptiveCanny.Location = new System.Drawing.Point(3, 478);
             this.isAdaptiveCanny.Name = "isAdaptiveCanny";
-            this.isAdaptiveCanny.Size = new System.Drawing.Size(103, 19);
+            this.isAdaptiveCanny.Size = new System.Drawing.Size(103, 17);
             this.isAdaptiveCanny.TabIndex = 3;
             this.isAdaptiveCanny.Text = "Adaptive canny:";
             this.isAdaptiveCanny.UseVisualStyleBackColor = true;
@@ -259,11 +261,24 @@
             // conStatus
             // 
             this.conStatus.AutoSize = true;
+            this.conStatus.Dock = System.Windows.Forms.DockStyle.Fill;
             this.conStatus.Location = new System.Drawing.Point(3, 0);
             this.conStatus.Name = "conStatus";
-            this.conStatus.Size = new System.Drawing.Size(35, 13);
+            this.conStatus.Size = new System.Drawing.Size(288, 20);
             this.conStatus.TabIndex = 9;
             this.conStatus.Text = "label2";
+            this.conStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(3, 143);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(80, 17);
+            this.checkBox1.TabIndex = 10;
+            this.checkBox1.Text = "checkBox1";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.Visible = false;
             // 
             // imagePanels
             // 
@@ -280,6 +295,17 @@
             this.imagePanels.Size = new System.Drawing.Size(551, 527);
             this.imagePanels.TabIndex = 4;
             // 
+            // originalView
+            // 
+            this.originalView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.originalView.FunctionalMode = Emgu.CV.UI.ImageBox.FunctionalModeOption.PanAndZoom;
+            this.originalView.Location = new System.Drawing.Point(3, 3);
+            this.originalView.Name = "originalView";
+            this.originalView.Size = new System.Drawing.Size(272, 521);
+            this.originalView.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.originalView.TabIndex = 5;
+            this.originalView.TabStop = false;
+            // 
             // imageView
             // 
             this.imageView.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -293,16 +319,16 @@
             this.imageView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.imageView_MouseDown);
             this.imageView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.imageView_MouseMove);
             // 
-            // originalView
+            // buttonAdaptateCanny
             // 
-            this.originalView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.originalView.FunctionalMode = Emgu.CV.UI.ImageBox.FunctionalModeOption.PanAndZoom;
-            this.originalView.Location = new System.Drawing.Point(3, 3);
-            this.originalView.Name = "originalView";
-            this.originalView.Size = new System.Drawing.Size(272, 521);
-            this.originalView.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.originalView.TabIndex = 5;
-            this.originalView.TabStop = false;
+            this.buttonAdaptateCanny.Dock = System.Windows.Forms.DockStyle.Left;
+            this.buttonAdaptateCanny.Location = new System.Drawing.Point(3, 218);
+            this.buttonAdaptateCanny.Name = "buttonAdaptateCanny";
+            this.buttonAdaptateCanny.Size = new System.Drawing.Size(103, 34);
+            this.buttonAdaptateCanny.TabIndex = 11;
+            this.buttonAdaptateCanny.Text = "Adaptate";
+            this.buttonAdaptateCanny.UseVisualStyleBackColor = true;
+            this.buttonAdaptateCanny.Click += new System.EventHandler(this.buttonAdaptateCanny_Click);
             // 
             // ROIWidth
             // 
@@ -321,7 +347,7 @@
             // cannyThreshold1
             // 
             this.cannyThreshold1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cannyThreshold1.Location = new System.Drawing.Point(3, 243);
+            this.cannyThreshold1.Location = new System.Drawing.Point(3, 258);
             this.cannyThreshold1.MaximumSize = new System.Drawing.Size(100000000, 45);
             this.cannyThreshold1.MaximumValue = 512;
             this.cannyThreshold1.MinimumSize = new System.Drawing.Size(0, 45);
@@ -335,7 +361,7 @@
             // cannyThreshold2
             // 
             this.cannyThreshold2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cannyThreshold2.Location = new System.Drawing.Point(3, 293);
+            this.cannyThreshold2.Location = new System.Drawing.Point(3, 308);
             this.cannyThreshold2.MaximumSize = new System.Drawing.Size(100000000, 45);
             this.cannyThreshold2.MaximumValue = 512;
             this.cannyThreshold2.MinimumSize = new System.Drawing.Size(0, 45);
@@ -363,7 +389,7 @@
             // MinContLength
             // 
             this.MinContLength.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MinContLength.Location = new System.Drawing.Point(3, 413);
+            this.MinContLength.Location = new System.Drawing.Point(3, 428);
             this.MinContLength.MaximumSize = new System.Drawing.Size(100000000, 45);
             this.MinContLength.MaximumValue = 255;
             this.MinContLength.MinimumSize = new System.Drawing.Size(0, 45);
@@ -377,7 +403,7 @@
             // ApproximationEpsilon
             // 
             this.ApproximationEpsilon.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ApproximationEpsilon.Location = new System.Drawing.Point(3, 363);
+            this.ApproximationEpsilon.Location = new System.Drawing.Point(3, 378);
             this.ApproximationEpsilon.MaximumSize = new System.Drawing.Size(100000000, 45);
             this.ApproximationEpsilon.MaximumValue = 500;
             this.ApproximationEpsilon.MinimumSize = new System.Drawing.Size(0, 45);
@@ -387,16 +413,6 @@
             this.ApproximationEpsilon.TabIndex = 8;
             this.ApproximationEpsilon.TrackbarLabel = "Approximation epsilon:";
             this.ApproximationEpsilon.Value = 1;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(3, 143);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(80, 17);
-            this.checkBox1.TabIndex = 10;
-            this.checkBox1.Text = "checkBox1";
-            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // MainWindow
             // 
@@ -417,8 +433,8 @@
             this.panelBlur.ResumeLayout(false);
             this.panelBlur.PerformLayout();
             this.imagePanels.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.imageView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.originalView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imageView)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -448,6 +464,7 @@
         private Emgu.CV.UI.ImageBox imageView;
         private Emgu.CV.UI.ImageBox originalView;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Button buttonAdaptateCanny;
         //private CTrackbar cTrackbar1;
     }
 }

@@ -35,6 +35,7 @@ namespace FotoRobot
         bool isPointsSendingRequired;
         bool isConnected;
         bool killThreads = false;
+        bool adaptationRequired = false;
 
         TcpClient TCP;
         NetworkStream networkStream;// = TCP.GetStream();
@@ -125,11 +126,32 @@ namespace FotoRobot
             {
                 if (TCP != null)
                 {
-                    if (conStatus.InvokeRequired) { conStatus.Invoke(new MethodInvoker(() => { conStatus.Text = "CONNECTED"; isConnected = true; })); }
+                    if (conStatus.InvokeRequired) { conStatus.Invoke(new MethodInvoker(() => { 
+                        conStatus.Text = "CONNECTED";
+                        conStatus.ForeColor = Color.Green;
+                        isConnected = true; })); 
+                    }
+
+                    if (buttonCamera.InvokeRequired)
+                    {
+                        buttonCamera.Invoke(new MethodInvoker(() => {
+                            buttonCamera.Enabled = true;
+                        }));
+                    }
 
                     if (TCP != null && !isClientConnected())
                     {
-                        if (conStatus.InvokeRequired) { conStatus.Invoke(new MethodInvoker(() => { conStatus.Text = "DISCONNECTED"; isConnected = false; })); }
+                        if (conStatus.InvokeRequired) { conStatus.Invoke(new MethodInvoker(() => {
+                            conStatus.Text = "DISCONNECTED";
+                            conStatus.ForeColor = Color.Red;
+                            isConnected = false; })); 
+                        }
+                        if (buttonCamera.InvokeRequired)
+                        {
+                            buttonCamera.Invoke(new MethodInvoker(() => {
+                                buttonCamera.Enabled = false;
+                            }));
+                        }
                         TCP = null;
                     }
                 }
@@ -323,7 +345,7 @@ namespace FotoRobot
             buttonCapture.Enabled = false;
             buttonCamera.Image = Properties.Resources.play;
             TCPSend("WAIT");
-            setImageTwoPanel(true);
+            setImageTwoPanel(false);
         }
 
         private void buttonSliders_Click(object sender, EventArgs e)
@@ -434,7 +456,6 @@ namespace FotoRobot
                 cannyThreshold2.Enabled = true;
             }
         }
-
 
         protected override bool ProcessCmdKey(ref Message message, Keys keys)
         {
@@ -673,6 +694,7 @@ namespace FotoRobot
             
             
             conStatus.Text = "DISCONNECTED";
+            conStatus.ForeColor = Color.Red;
 
         }
 
@@ -716,7 +738,7 @@ namespace FotoRobot
         {
             try
             {
-                TCP = new TcpClient("192.168.0.2", 49152);
+                TCP = new TcpClient("127.0.0.1", 49152);
                 networkStream = TCP.GetStream();
                 //clientStreamWriter = new StreamWriter(networkStream);
             }
@@ -789,7 +811,7 @@ namespace FotoRobot
 
             double CannyThresh2 = parameters.cannyThreshold1;
             double CannyThresh1 = parameters.cannyThreshold2;
-            if (parameters.isAdaptive)
+            if (adaptationRequired)
             {
                 CannyThresh2 = CvInvoke.Threshold(BlurFrame, CannyFrame, 0, 255,
                     Emgu.CV.CvEnum.ThresholdType.Binary | Emgu.CV.CvEnum.ThresholdType.Otsu);
@@ -802,6 +824,7 @@ namespace FotoRobot
                         cannyThreshold2.Value = (int)CannyThresh2;
                     }));
                 }
+                adaptationRequired = false;
             }
             
 
@@ -972,5 +995,9 @@ namespace FotoRobot
 
         }
 
+        private void buttonAdaptateCanny_Click(object sender, EventArgs e)
+        {
+            adaptationRequired = true;
+        }
     }
 }
