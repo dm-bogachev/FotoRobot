@@ -738,7 +738,7 @@ namespace FotoRobot
         {
             try
             {
-                TCP = new TcpClient("127.0.0.1", 49152);
+                TCP = new TcpClient("192.168.0.2", 49152);
                 networkStream = TCP.GetStream();
                 //clientStreamWriter = new StreamWriter(networkStream);
             }
