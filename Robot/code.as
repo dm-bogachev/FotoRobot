@@ -1,20 +1,41 @@
-.INTER_PANEL_D
-0,10,"","RUN PC","","",10,4,15,1,"pcexec fotorobotpc",0
-1,10,"","STOP PC","","",10,4,15,2,"stopcon = true",0
-7,14,"uploaded","Uploaded","",10,15,0
-8,14,"percent","Drawn","",10,15,0
-3,2,"","CANCEL","DRAW","",10,4,15,2050,0
-28,10,"","Start","setup","",10,4,15,3,"pcexec 2: fotorobotsetup",0
-30,3,"","a2","","",10,4,15,0,0,2002,2012,0
-31,3,"","a3","","",10,4,15,0,0,2003,2013,0
-34,2,"","Finish","","",10,4,15,2005,0
-37,3,"","a1","","",10,4,15,0,0,2001,2011,0
-38,3,"","a4","","",10,4,15,0,0,2004,2014,0
+.SIG_COMMENT
+.AUXDATA
+N_INT1    "gp_home  "
+N_INT2    "gp_aim1  "
+N_INT3    "gp_aim2  "
+N_INT4    "gp_a1  "
+N_INT5    "gp_a2  "
+N_INT6    "gp_a3  "
+N_INT7    "gp_a4  "
+N_INT8    "gp_frame  "
+N_INT9    "gp_endp  "
 .END
-
+.INTER_PANEL_D
+0,10,"","  RUN PC","","",10,4,7,1,pcexec fotorobotpc,0
+1,10,"","  STOP PC","","",10,4,7,2,stopcon = true,0
+3,2,"","   CANCEL","   DRAW","",10,4,13,2050,0
+7,14,"uploaded","Uploaded","",10,9,0
+8,14,"percent","Drawn","",10,9,0
+28,10,"","Start","","",10,4,9,3,pcexec 2: fotorobotsetup,0
+30,2,"","home point","","",10,4,7,2001,0
+31,2,"","  aim 1","","",10,4,9,2002,0
+32,2,"","  aim 2","","",10,4,9,2003,0
+33,2,"","  endp","","",10,4,7,2009,0
+35,2,"","    a1","","",10,4,7,2004,0
+36,2,"","    a2","","",10,4,7,2005,0
+37,9,1,5,7
+38,9,1,4,7
+42,2,"","    a3","","",10,4,7,2006,0
+43,2,"","    a4","","",10,4,7,2007,0
+44,9,2,5,9
+45,9,2,4,9
+50,2,"","   Create","   frame","",10,4,7,2008,0
+51,9,3,5,9
+52,9,3,4,9
+.END
 .INTER_PANEL_TITLE
 "Control",1
-"Setup",0
+"Setup",1
 "",0
 "",0
 "",0
@@ -24,8 +45,6 @@
 .END
 .INTER_PANEL_COLOR_D
 182,3,224,244,28,159,252,255,251,255,0,31,2,241,52,219,
-.END
-.SIG_COMMENT
 .END
 .PROGRAM close_socket() #47;Closing communication
   TCP_CLOSE ret,sock_id;Normal socket closure 
@@ -68,21 +87,6 @@ retraim:
     IF $action=="WAIT" THEN
       $action = ""
       BREAK
-      SPEED 500 MM/S ALWAYS
-      ;WHILE $action!="DRAW" DO
-        ;BREAK
-        ;SPEED 500 MM/S ALWAYS
-        ;JMOVE #aim_add1
-        ;TWAIT 0.5
-        ;JMOVE #aim_add2
-        ;TWAIT 0.5
-        ;JMOVE #aim_point
-        ;IF $action=="AIM" THEN
-        ;  $action = ""
-        ;  GOTO retraim
-        ;END
-      ;END
-      BREAK
       SPEED 1000 MM/S ALWAYS
       JMOVE #aim_point
       JMOVE #aim_point1
@@ -99,7 +103,7 @@ retraim:
             LMOVE startp+TRANS(dpt[drawed_points,0],-dpt[drawed_points,1],-dpt[drawed_points,2])
             drawed_points = drawed_points+1
             $percent = $ENCODE(/F6.2,drawed_points*100/points_length)+" %"
-			; Returning to home point after finishing         
+      ; Returning to home point after finishing         
           ELSE
             GOTO stop
           END
@@ -135,10 +139,10 @@ stop:
 .PROGRAM fotorobotpc() #24
   port = 49152
   max_length = 255
-  tout_open = 5
-  tout_rec = 5
+  tout_open = 1
+  tout_rec = 1
   text_id = 0
-  tout = 60
+  tout = 1
   eret = 0
   rret = 0
   stopcon = FALSE; 
@@ -204,10 +208,10 @@ cyc_begin:
           CALL send(eret,$sdata[1])
           GOTO recv_end
         END
-		;IF SIG(2050) 
-		;	$action = "STOPDRAW"
-		;	GOTO recv_end
-		;END
+    ;IF SIG(2050) 
+    ; $action = "STOPDRAW"
+    ; GOTO recv_end
+    ;END
         IF $recv_buf[1]=="ENDRECV" THEN
           $fin = "OK"
         ELSE
@@ -225,28 +229,28 @@ cyc_begin:
         END
 recv_end:
         eret = 0
-        $sdata[1] = "OK"		
+        $sdata[1] = "OK"    
         CALL send(eret,$sdata[1])
       END
-	  ;print "receiveAudio"
-	  WHILE drawfinished!=TRUE
-		IF SIG(2050) 
-			$action = "STOPDRAW"
-		END
-		;tout_rec = 10
-		;print $recv_buf[1]
-		;CALL recv
+    ;print "receiveAudio"
+    WHILE drawfinished!=TRUE
+    IF SIG(2050) 
+      $action = "STOPDRAW"
+    END
+    ;tout_rec = 10
+    ;print $recv_buf[1]
+    ;CALL recv
         ;IF $recv_buf[1]=="STOPDRAW" THEN
         ; $action = "STOPDRAW"
         ;  eret = 0
          ; $sdata[1] = "OK"
         ;  CALL send(eret,$sdata[1])
         ;END
-		
-	  END
+    
+    END
       ;WAIT drawfinished==TRUE
-	  
-	  
+    
+    
       $sdata[1] = "DRAWOK"
       CALL send(eret,$sdata[1])
     END
@@ -257,29 +261,54 @@ exit:
   CALL close_socket;Closing communication 
 exit_end:
 .END
-.PROGRAM fotorobotsetup() #20
-  SIGNAL (-2011)
-  SIGNAL (-2012)
-  SIGNAL (-2013)
-  SIGNAL (-2014)
-  WAIT (SIG(2001))
-  HERE a1
-  SIGNAL (2011)
-  WAIT (SIG(2002))
-  HERE a2
-  SIGNAL (2012)
-  WAIT (SIG(2003))
-  HERE a3
-  SIGNAL (2013)
-  WAIT (SIG(2004))
-  HERE a4
-  SIGNAL (2014)
-  WAIT (SIG(2005))
-  POINT startp = FRAME(a2,a3,a4,a1)
-  SIGNAL (-2011)
-  SIGNAL (-2012)
-  SIGNAL (-2013)
-  SIGNAL (-2014)
+.PROGRAM fotorobotsetup () #20
+  WHILE TRUE DO
+    IF SIG (gp_home) THEN
+      HERE #home_point
+    END
+    IF SIG (gp_aim1) THEN
+      HERE #aim_point
+    END
+    IF SIG (gp_aim2) THEN
+      HERE #aim_point1
+    END
+    IF SIG (gp_a1) THEN
+      HERE a1
+    END
+    IF SIG (gp_endp) THEN
+      HERE #endp
+    END
+    IF SIG (gp_a2) THEN
+      HERE a2
+    END
+    IF SIG (gp_a3) THEN
+      HERE a3
+    END
+    IF SIG (gp_a4) THEN
+      HERE a4
+    END
+    IF SIG (gp_frame) THEN
+      POINT startp = FRAME (a2, a3, a4, a1)
+    END
+    CALL pointtostr ("#home_point", .$rs)
+    IFPWOVERWRITE 1, 1 = "#home_point: " + .$rs
+    CALL pointtostr ("#aim_point", .$rs)
+    IFPWOVERWRITE 1, 2 = "#aim_point: " + .$rs
+    CALL pointtostr ("#aim_point1", .$rs)
+    IFPWOVERWRITE 1, 3 = "#aim_point1: " + .$rs
+    CALL pointtostr ("#endp", .$rs)
+    IFPWOVERWRITE 1, 3 = "#aim_point1: " + .$rs
+    CALL pointtostr ("a1", .$rs)
+    IFPWOVERWRITE 1, 4 = "a1: " + .$rs
+    CALL pointtostr ("a2", .$rs)
+    IFPWOVERWRITE 2, 1 = "a2: " + .$rs
+    CALL pointtostr ("a3", .$rs)
+    IFPWOVERWRITE 2, 2 = "a3: " + .$rs
+    CALL pointtostr ("a4", .$rs)
+    IFPWOVERWRITE 2, 3 = "a4: " + .$rs
+    CALL pointtostr ("startp", .$rs)
+    IFPWOVERWRITE 2, 4 = "startp: " + .$rs
+  END
 .END
 .PROGRAM open_socket() #167;Starting c ommunication
   er_count = 0
@@ -318,7 +347,7 @@ exit:
 .END
 .PROGRAM recv() #40829;Communication Receiving data
   .num = 0
-  TCP_RECV rret,sock_id,$recv_buf[1],.num,tout_rec,max_length
+  tcp_recv rret,sock_id,$recv_buf[1],.num,tout_rec,max_length
   IF rret<0 THEN
     PRINT "TCP_RECV error in RECV",rret
     $recv_buf[1] = "000"
@@ -334,7 +363,7 @@ exit:
   $send_buf[1] = .$data
   buf_n = 1
   .ret = 1
-  TCP_SEND .ret,sock_id,$send_buf[1],buf_n,tout
+  tcp_send .ret,sock_id,$send_buf[1],buf_n,tout
   IF .ret<0 THEN
     .ret = -1
     PRINT "TCP_SEND error in SEND",.ret
@@ -353,7 +382,7 @@ exit:
 .END
 .PROGRAM tcp_recv() #135;Communication Receiving data
   .num = 0
-  TCP_RECV rret,sock_id,$recv_buf[1],.num,tout_rec,max_length
+  tcp_recv rret,sock_id,$recv_buf[1],.num,tout_rec,max_length
   IF rret<0 THEN
     PRINT "TCP_RECV error in RECV",rret
     $recv_buf[1] = "000"
@@ -369,7 +398,7 @@ exit:
   $send_buf[1] = .$data
   buf_n = 1
   .ret = 1
-  TCP_SEND .ret,sock_id,$send_buf[1],buf_n,tout
+  tcp_send .ret,sock_id,$send_buf[1],buf_n,tout
   IF .ret<0 THEN
     .ret = -1
     PRINT "TCP_SEND error in SEND",.ret
@@ -377,7 +406,82 @@ exit:
     PRINT "TCP_SEND OK  in SEND",.ret
   END
 .END
-
+.PROGRAM transtostr (.pt,.$string) ; 
+      PRINT 0: "Aaa"
+      DECOMPOSE .data[0] = .pt
+      .$string = ""
+      FOR .i = 0 TO 5
+        TYPE .data[.i]
+        .$string = .$string + $ENCODE (/D, .data[.i]) + ";"
+      END
+.END
+.PROGRAM jointtostr(.#pt,.$string)
+      POINT .#temp = .#pt
+      DECOMPOSE .data[0] = .#temp
+      .$string = ""
+      FOR .i = 0 TO 5
+        TYPE .data[.i]
+        .$string = .$string + $ENCODE (/D, .data[.i]) + ";"
+      END
+.END
+.PROGRAM pointtostr(.$pos,.$res)
+      DECOMPOSE .data[0] = STRTOPOS(.$pos)
+      .$res = ""
+      FOR .i = 0 TO 5
+        .valu = ROUND(.data[.i])
+        .$res = .$res + $ENCODE (/D, .valu)  + ", "
+      END
+.END
+.PROGRAM Comment___ () ; Comments for IDE. Do not use.
+	; @@@ PROJECT @@@
+	; @@@ HISTORY @@@
+	; @@@ INSPECTION @@@
+	; @@@ CONNECTION @@@
+	; KROSET R01
+	; 127.0.0.1
+	; 9105
+	; @@@ PROGRAM @@@
+	; 0:close_socket:F
+	; 0:fotorobot:F
+	; 0:fotorobotcalib:F
+	; 0:fotorobotpc:F
+	; 0:fotorobotsetup:F
+	; 0:open_socket:F
+	; 0:recv:F
+	; 0:send:F
+	; 0:t1:F
+	; 0:tcp_recv:F
+	; 0:tcp_send:F
+	; 0:transtostr:F
+	; .trans 
+	; .pt 
+	; .$string 
+	; 0:jointtostr:F
+	; .#pt 
+	; .$rs 
+	; 0:pointtostr:F
+	; .$pos 
+	; .$res 
+	; @@@ TRANS @@@
+	; @@@ JOINTS @@@
+	; @@@ REALS @@@
+	; @@@ STRINGS @@@
+	; @@@ INTEGER @@@
+	; @@@ SIGNALS @@@
+	; gp_home 
+	; gp_aim1 
+	; gp_aim2 
+	; gp_a1 
+	; gp_a2 
+	; gp_a3 
+	; gp_a4 
+	; gp_frame 
+	; gp_endp 
+	; @@@ TOOLS @@@
+	; @@@ BASE @@@
+	; @@@ FRAME @@@
+	; @@@ BOOL @@@
+.END
 .REALS
 buf_n = 1
 drawed_points = 594
@@ -402,6 +506,15 @@ tout = 60
 tout_open = 5
 tout_rec = 5
 watched = -1
+gp_home = 2001
+gp_aim1 = 2002
+gp_aim2 = 2003
+gp_a1 = 2004
+gp_a2 = 2005
+gp_a3 = 2006
+gp_a4 = 2007
+gp_frame = 2008
+gp_endp = 2009
 .END
 .STRINGS
 $action = ""
