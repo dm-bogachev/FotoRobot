@@ -75,6 +75,8 @@ N_INT309    "t_startp  "
     IF $action == "AIM" THEN
       $action = ""
       BREAK
+      SWAIT(-1004)
+      CALL pg100
       SPEED 1000 MM/S ALWAYS
       JMOVE #aim_point1
 retraim:
@@ -119,6 +121,7 @@ stop:
       JMOVE #endp
       JMOVE #home_point
       $state = "STOP"
+      CALL pg101
       drawing_finished = TRUE
       $action = ""
     END
@@ -473,12 +476,17 @@ END
 	; .buf_n 
 	; .ret 
 	; 0:socket_error.pc:B
+	; .ret 
 	; 0:autostart5.pc:B
 	; 0:ifp.pc:B
+	; .start_permission 
 	; 0:stop_pc.pc:B
 	; 0:p2str.pc:B
 	; .$point 
 	; .$str 
+	; .data 
+	; .i 
+	; .valu 
 	; 0:disp_points.pc:B
 	; @@@ TRANS @@@
 	; @@@ JOINTS @@@
