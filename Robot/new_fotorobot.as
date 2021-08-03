@@ -119,7 +119,10 @@ retraim:
 stop:
       SPEED 1000 MM/S ALWAYS
       JMOVE #endp
-      JMOVE #home_point
+      JMOVE #home_point   
+      
+      
+      
       $state = "STOP"
       CALL pg101
       drawing_finished = TRUE
@@ -533,10 +536,10 @@ a4 6.797167 219.948227 218.975281 44.900761 172.933228 -134.882507
 .REALS
 tcp_port = 49152
 socket_id = -1
-accept_tout = 5
-receive_tout = 5
+accept_tout = 10
+receive_tout = 60
 drawing_finished = 0
-send_tout = 5
+send_tout = 30
 recieved_point = 0
 cancel_draw = 2100
 cancel_draw_l = 2101
